@@ -1,0 +1,23 @@
+{
+  "name": "calculate-cn-node",
+  "version": "1.0.0",
+  "description": "A node script that could find chinese string in your project",
+  "main": "1.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Licodeao/calculate-cn-node.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Licodeao/calculate-cn-node/issues"
+  },
+  "homepage": "https://github.com/Licodeao/calculate-cn-node#readme",
+  "dependencies": {
+    "csv-writer": "^1.6.0"
+  }
+}
