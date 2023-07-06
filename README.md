@@ -11,3 +11,8 @@ A node script that could find chinese string in your project
 
 The disadvantage of this script is that it cannot make Chinese text form a word.
 If you want to solve this problem, maybe search about `nodejieba` registry etc.
+
+## TODO
+
+- [ ] Consider multiple annotations
+- [ ] Optimize word segmentation ability

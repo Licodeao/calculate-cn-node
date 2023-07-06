@@ -23,7 +23,7 @@ function calculateCnNode(directory) {
 
       for (let j = 0; j < lines.length; j++) {
         const line = lines[j];
-        if (!line.includes("//")) {
+        if (!line.includes("// || /** */")) {
           let match;
           while ((match = chineseRegex.exec(line)) !== null) {
             info.push({
