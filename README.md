@@ -14,5 +14,5 @@ If you want to solve this problem, maybe search about `nodejieba` registry etc.
 
 ## TODO
 
-- [ ] Consider multiple annotations
+- [x] Consider multiple annotations
 - [ ] Optimize word segmentation ability
