@@ -8,23 +8,21 @@ const matchCnStringLiteral = /'[\u4e00-\u9fa5]+'/g;
 const commentRegex = /\/\/.*|\/\*[\s\S]*?\*\//g;
 const consoleRegex = /console\..*/g;
 
-const info = [];
+const segment = new Segment();
+segment.useDefault();
 
-function calculateCnNode(directory) {
-  const segment = new Segment();
-  segment.useDefault();
-
-  const files = fs.readdirSync(directory);
+async function calculateCnNode(directory, csvWriter) {
+  const files = await fs.promises.readdir(directory);
 
   for (let i = 0; i < files.length; i++) {
     const file = files[i];
     const filePath = path.join(directory, file);
-    const stats = fs.statSync(filePath);
+    const stats = await fs.promises.stat(filePath);
 
     if (stats.isDirectory()) {
-      calculateCnNode(filePath);
+      await calculateCnNode(filePath, csvWriter);
     } else if (stats.isFile()) {
-      const fileContent = fs.readFileSync(filePath, "utf-8");
+      const fileContent = await fs.promises.readFile(filePath, "utf-8");
       const lines = fileContent.split(/\r?\n/);
 
       for (let j = 0; j < lines.length; j++) {
@@ -38,12 +36,14 @@ function calculateCnNode(directory) {
               stripPunctuation: true,
             });
             const wordIndex = line.indexOf(words);
-            info.push({
-              char: words,
-              line: j + 1,
-              column: wordIndex + 1,
-              file: filePath,
-            });
+            await csvWriter.writeRecords([
+              {
+                char: words,
+                line: j + 1,
+                column: wordIndex + 1,
+                file: filePath,
+              },
+            ]);
           }
           const stringLiteralMatches = line.match(matchCnStringLiteral);
           if (stringLiteralMatches) {
@@ -54,24 +54,25 @@ function calculateCnNode(directory) {
                 stripPunctuation: true,
               });
               const wordIndex = line.indexOf(words);
-              info.push({
-                char: words,
-                line: j + 1,
-                column: wordIndex + 1,
-                file: filePath,
-              });
+              await csvWriter.writeRecords([
+                {
+                  char: words,
+                  line: j + 1,
+                  column: wordIndex + 1,
+                  file: filePath,
+                },
+              ]);
             }
           }
         }
       }
     }
+    console.log("当前已完成一个分词操作~");
   }
 }
 
 const input = process.argv[2];
 const output = process.argv[3];
-
-calculateCnNode(input);
 
 const csvWriter = createCsvWriter({
   path: output,
@@ -83,6 +84,10 @@ const csvWriter = createCsvWriter({
   ],
 });
 
-csvWriter.writeRecords(info).then(() => {
-  console.log("CSV file written successfully");
-});
+csvWriter
+  .writeRecords([{ char: "", line: "", column: "", file: "" }])
+  .then(() => {
+    calculateCnNode(input, csvWriter).then(() => {
+      console.log("CSV file written successfully");
+    });
+  });

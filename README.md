@@ -38,4 +38,4 @@ If you want to look up it，[click here](https://github.com/leizongmin/node-segm
 
 - [x] Consider multiple annotations
 - [x] Optimize word segmentation ability
-- [ ] Optimize the code to solve the problem of using too much memory
+- [x] Optimize the code to solve the problem of using too much memory
