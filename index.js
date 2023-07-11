@@ -12,6 +12,11 @@ const segment = new Segment();
 segment.useDefault();
 
 async function calculateCnNode(directory, csvWriter) {
+  const baseName = path.basename(directory);
+  if (
+    baseName === "assets || images || imgs || photos || api || store || utils"
+  )
+    return;
   const files = await fs.promises.readdir(directory);
 
   for (let i = 0; i < files.length; i++) {
@@ -19,7 +24,7 @@ async function calculateCnNode(directory, csvWriter) {
     const filePath = path.join(directory, file);
     const stats = await fs.promises.stat(filePath);
 
-    if (stats.isDirectory()) {
+    if (stats.isDirectory() && path.basename()) {
       await calculateCnNode(filePath, csvWriter);
     } else if (stats.isFile()) {
       const fileContent = await fs.promises.readFile(filePath, "utf-8");
