@@ -6,11 +6,11 @@ A node script that could find chinese string in your project
 
 1. Use `npm install`
 
-2. Use `node index.js <The file or directory you want> <output file>` command
+2. Use `node index.js <The file or directory you want> <output file> <avoid files>` command
 
    ```javascript
    // example
-   node index.js src output.csv
+   node index.js src output.csv assets images
    ```
 
 3. If you use correctly，you could get a result as following：
@@ -24,6 +24,8 @@ A node script that could find chinese string in your project
 The index.js file must be located in the root directory of your project.
 
 or, you could configure the command to adjust dynamically.
+
+The same time, files you want to avoid must also be located in the the file or directory you want.
 
 ## Note
 
@@ -39,3 +41,4 @@ If you want to look up it，[click here](https://github.com/leizongmin/node-segm
 - [x] Consider multiple annotations
 - [x] Optimize word segmentation ability
 - [x] Optimize the code to solve the problem of using too much memory
+- [x] Add avoid files feature

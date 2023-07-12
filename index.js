@@ -11,12 +11,17 @@ const consoleRegex = /console\..*/g;
 const segment = new Segment();
 segment.useDefault();
 
-async function calculateCnNode(directory, csvWriter) {
+/**
+ *
+ * @param {String} directory 需要遍历的文件夹
+ * @param {Object} csvWriter 创建的csvWriter对象
+ * @param {String} avoidFiles 需要避免遍历的文件
+ * @returns
+ */
+async function calculateCnNode(directory, csvWriter, avoidFiles) {
   const baseName = path.basename(directory);
-  if (
-    baseName === "assets || images || imgs || photos || api || store || utils"
-  )
-    return;
+  if (avoidFiles.includes(baseName)) return;
+
   const files = await fs.promises.readdir(directory);
 
   for (let i = 0; i < files.length; i++) {
@@ -24,8 +29,8 @@ async function calculateCnNode(directory, csvWriter) {
     const filePath = path.join(directory, file);
     const stats = await fs.promises.stat(filePath);
 
-    if (stats.isDirectory() && path.basename()) {
-      await calculateCnNode(filePath, csvWriter);
+    if (stats.isDirectory()) {
+      await calculateCnNode(filePath, csvWriter, avoidFiles);
     } else if (stats.isFile()) {
       const fileContent = await fs.promises.readFile(filePath, "utf-8");
       const lines = fileContent.split(/\r?\n/);
@@ -78,6 +83,7 @@ async function calculateCnNode(directory, csvWriter) {
 
 const input = process.argv[2];
 const output = process.argv[3];
+const avoidArray = process.argv.slice(4);
 
 const csvWriter = createCsvWriter({
   path: output,
@@ -89,10 +95,8 @@ const csvWriter = createCsvWriter({
   ],
 });
 
-csvWriter
-  .writeRecords([{ char: "", line: "", column: "", file: "" }])
-  .then(() => {
-    calculateCnNode(input, csvWriter).then(() => {
-      console.log("CSV file written successfully");
-    });
+csvWriter.writeRecords([]).then(() => {
+  calculateCnNode(input, csvWriter, avoidArray).then(() => {
+    console.log("CSV file written successfully");
   });
+});
